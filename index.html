@@ -1,51 +1,40 @@
 <!DOCTYPE html>
 <html lang="zh">
-  <head>
-    <meta charset="utf-8" />
-    <title>Cesium Google 衛星雲圖 (麥卡托投影)</title>
-    <script src="https://cesium.com/downloads/cesiumjs/releases/1.115/Build/Cesium/Cesium.js"></script>
-    <link
-      href="https://cesium.com/downloads/cesiumjs/releases/1.115/Build/Cesium/Widgets/widgets.css"
-      rel="stylesheet"
-    />
-    <style>
-      html,
-      body,
-      #cesiumContainer {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="cesiumContainer"></div>
-    <script>
-      // 建立 Google 衛星圖層
-      const googleImagery = new Cesium.UrlTemplateImageryProvider({
-        url: "https://mt{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
-        subdomains: ["0", "1", "2", "3"],
+<head>
+  <meta charset="utf-8" />
+  <title>Cesium OSM/ESRI 衛星雲圖 (2D 麥卡托)</title>
+  <script src="https://cesium.com/downloads/cesiumjs/releases/1.115/Build/Cesium/Cesium.js"></script>
+  <link href="https://cesium.com/downloads/cesiumjs/releases/1.115/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+
+  <style>
+    html, body, #cesiumContainer {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <div id="cesiumContainer"></div>
+  <script>
+    window.onload = function () {
+      // ✅ 使用 ESRI 提供的衛星圖層
+      const esriImagery = new Cesium.UrlTemplateImageryProvider({
+        url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
       });
 
-      // 建立 Viewer
       const viewer = new Cesium.Viewer("cesiumContainer", {
-        imageryProvider: googleImagery,
+        imageryProvider: esriImagery,
         baseLayerPicker: false,
-        geocoder: false,
-        homeButton: false,
-        sceneModePicker: false,
-        navigationHelpButton: false,
-        animation: false,
-        timeline: false,
-        fullscreenButton: false,
-        sceneMode: Cesium.SceneMode.SCENE2D, // 使用 2D (麥卡托投影)
+        sceneMode: Cesium.SceneMode.SCENE2D
       });
 
-      // 定位到指定範圍 (北緯10-50, 東經100-140)
+      // 定位到 北緯10-50度，東經100-140度
       const rectangle = Cesium.Rectangle.fromDegrees(100, 10, 140, 50);
       viewer.camera.setView({ destination: rectangle });
-    </script>
-  </body>
+    };
+  </script>
+</body>
 </html>
